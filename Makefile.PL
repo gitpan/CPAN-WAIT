@@ -1,14 +1,16 @@
-# Makefile.PL -- 
-# ITIID           : $ITI$ $Header $__Header$
+#                              -*- Mode: Perl -*- 
+# $Basename: Makefile.PL $
+# $Revision: 1.1 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 15:36:26 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Mon Feb 17 09:40:44 1997
+# Last Modified On: Mon Aug 11 17:55:55 1997
 # Language        : CPerl
-# Update Count    : 20
+# Update Count    : 24
 # Status          : Unknown, Use with caution!
 # 
-# (C) Copyright 1997, Universität Dortmund, all rights reserved.
+# (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
+# 
 # 
 
 use ExtUtils::MakeMaker;
@@ -16,7 +18,8 @@ use ExtUtils::MakeMaker;
 WriteMakefile
   (
    'NAME'	   => 'CPAN::WAIT',
-   'VERSION_FROM'  => 'lib/CPAN/WAIT.pm', # finds $VERSION
+#  $Format: "   'VERSION' => '$ModuleVersion$',"$
+   'VERSION' => '0.23',
    'PREREQ_PM'     =>
    {
     CPAN      => 0,
@@ -24,8 +27,7 @@ WriteMakefile
    },                         
    'dist'          =>
    {
-    PREOP        => 'pod2text lib/CPAN/WAIT.pm > README;'.
-                    'changelog -update',
+    PREOP        => 'pod2text lib/CPAN/WAIT.pm > README;',
     DIST_DEFAULT => 'tardist',
     COMPRESS     => 'gzip -9f'
    },

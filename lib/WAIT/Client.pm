@@ -1,15 +1,17 @@
+#!/usr/bin/perl
 #                              -*- Mode: Perl -*- 
-# Client.pm -- 
-# ITIID           : $ITI$ $Header $__Header$
+# $Basename: Client.pm $
+# $Revision: 1.1 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 10:49:37 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Tue Feb 11 15:32:14 1997
+# Last Modified On: Mon Aug 11 17:06:51 1997
 # Language        : CPerl
-# Update Count    : 85
+# Update Count    : 88
 # Status          : Unknown, Use with caution!
 # 
-# (C) Copyright 1997, Universität Dortmund, all rights reserved.
+# (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
+# 
 # 
 
 package WAIT::Client;
@@ -102,10 +104,12 @@ sub new {
               proxy_port => $port,
               wais_host  => $host,
               wais_port  => $parm{Port},
+              timeout    => $parm{Timeout}||120,
              };
   bless $self, $type;
-  
-  if ($self->command('HELP')->response == CMD_INFO) {
+
+  my $con;
+  if ($con = $self->command('HELP') and $con->response == CMD_INFO) {
     return $self;
   } else {
     return;
@@ -114,7 +118,7 @@ sub new {
 
 sub command {
   my $self = shift;
-  my $con  =
+  my $con  =                    # Constructor inherited from IO::Socket::INET
     WAIT::Client::HTTP::Handle->new
       (
        PeerAddr => $self->{proxy_host},
@@ -122,6 +126,8 @@ sub command {
        Proto    => 'tcp',
       );
   return unless $con;
+
+  $con->timeout($self->{timeout}) if defined $self->{timeout};
   my $cmd = join ' ', @_;
   
   if ($self->{hits}) {

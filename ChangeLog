@@ -1,13 +1,7 @@
-Mon Feb 17 09:00:00 1997 Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de> 
+Mon Aug 11 17:57:27 1997  Ulrich Pfeifer  <pfeifer@ls6.informatik.uni-dortmund.de>
 
-	* MANIFEST Makefile.PL lib/CPAN/WAIT.pm t/basic.t: Removed obsolete
-	  proxy test
-
-Thu Feb 13 11:00:00 1997 Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de> 
-
-	* ChangeLog MANIFEST Makefile.PL README lib/CPAN/WAIT.pm t/proxy.t:
-	  Fixed messages emmitted by 'require CPAN::WAIT'. Added test for
-	  proxy mode.
+	* lib/CPAN/WAIT.pm lib/WAIT/Client.pm: Now does not open a
+ 	connection at load time. Timeout now is 20 seconds.
 
 Tue Feb 11 14:00:00 1997 Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de> 
 

@@ -1,84 +1,96 @@
 #                              -*- Mode: Perl -*- 
-# WAIT.pm -- 
-# ITIID           : $ITI$ $Header $__Header$
+# $Basename: WAIT.pm $
+# $Revision: 1.1 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Mon Feb 17 09:38:30 1997
+# Last Modified On: Mon Aug 11 18:04:46 1997
 # Language        : CPerl
-# Update Count    : 110
+# Update Count    : 134
 # Status          : Unknown, Use with caution!
 # 
-# (C) Copyright 1997, Universität Dortmund, all rights reserved.
+# (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
+# 
 # 
 
 package CPAN::WAIT;
 require CPAN::Config;
-require Exporter;
 require CPAN;
 require WAIT::Client;
 require FileHandle;
 use Carp;
-use Config;
-use vars qw(@EXPORT_OK @ISA $VERSION $DEBUG);
+use vars qw($VERSION $DEBUG);
 
-$VERSION   = '0.22';
-@ISA       = qw(Exporter);
-@EXPORT_OK = qw(wh wq wr wd wl);
+# $Format: "\$VERSION = '$ModuleVersion$';"$
+$VERSION = '0.23';
 
-my ($host, $port, $con);
-
-# Make sure that there is a wait server to try
-unless ($CPAN::Config->{'wait_list'}) {
-  $CPAN::Config->{'wait_list'} = ['wait://ls6.informatik.uni-dortmund.de'];
-}
-
-# Try direct connection
-my $server;
-for $server (@{$CPAN::Config->{'wait_list'}}) {
-  if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
-    ($host, $port) = ($1, $2 || 1404);
-    $con = new WAIT::Client $host, Port => $port
-      unless $DEBUG and $DEBUG =~ /force proxy/;
-    last if $con;
+sub _open_connection () {
+  my ($host, $port, $con);
+  
+  # Make sure that there is a wait server to try
+  unless ($CPAN::Config->{'wait_list'}) {
+    $CPAN::Config->{'wait_list'} = ['wait://ls6.informatik.uni-dortmund.de'];
   }
-}
-
-# Try connection via an http proxy
-unless ($con) {
-  warn "Could not connect to the WAIT server at $host port $port\n"
-     unless $DEBUG and $DEBUG =~ /force proxy/;
-
-  if ($CPAN::Config->{'http_proxy'}) {
-    print "Trying your http proxy $CPAN::Config->{'http_proxy'}\n";
-    for $server (@{$CPAN::Config->{'wait_list'}}) {
-      if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
-        ($host, $port) = ($1, $2 || 1404);
-        $con = new WAIT::Client::HTTP $host,
-                                      Port  => $port,
-                                      Proxy => $CPAN::Config->{'http_proxy'};
-        last if $con;
-      }
+  
+  # Try direct connection
+  my $server;
+ SERVER:
+  for $server (@{$CPAN::Config->{'wait_list'}}) {
+    warn "CPAN::WAIT $VERSION checking $server\n" if $DEBUG;
+    if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
+      ($host, $port) = ($1, $2 || 1404);
+      # Constructor is inherited from Net::NNTP
+      $con = WAIT::Client->new($host, Port => $port, Timeout => 20)
+        unless $DEBUG and $DEBUG =~ /force proxy/;
+      last SERVER if $con;
     }
-    warn "No luck with your proxy either. Giving up\n"
-      unless $con;
-  } else {
-    warn "If your tell the CPAN module were your http proxy is, I would try that\n";
   }
+  
+  # Try connection via an http proxy
+  unless ($con) {
+    warn "Could not connect to the WAIT server at $host port $port\n"
+      unless $DEBUG and $DEBUG =~ /force proxy/;
+    
+    if ($CPAN::Config->{'http_proxy'}) {
+      print "Trying your http proxy $CPAN::Config->{'http_proxy'}\n";
+    SERVER:
+      for $server (@{$CPAN::Config->{'wait_list'}}) {
+        if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
+          ($host, $port) = ($1, $2 || 1404);
+          $con = WAIT::Client::HTTP->new($host,
+                                         Port  => $port,
+                                         Proxy => $CPAN::Config->{'http_proxy'},
+                                         Timeout => 20);
+          last SERVER if $con;
+        }
+      }
+      warn "No luck with your proxy either. Giving up\n"
+        unless $con;
+    } else {
+      warn "You did not tell the CPAN module about an http proxy.\n" .
+        "I could use such a beast instead of a direct connection.\n";
+    }
+  }
+  
+  # We had no luck.
+  warn "No searching available!\n" unless $con;
+  
+  return $con;
 }
 
-# We had no luck. require will fail!
-warn "No searching available!\n" unless $con;
-
+my $con;
 # Temporary file for retrieved documents
-my $tmp = $CPAN::META->catfile ($CPAN::Config->{'cpan_home'}, 'w4c.pod');
+my $tmp;
+
+$tmp = $CPAN::META->catfile ($CPAN::Config->{'cpan_home'}, 'w4c.pod');
 
 # run a search
 sub wq {
   my $self = shift;
   my $result;
   local ($") = ' ';
-  
+
+  $con ||= _open_connection || return;
   print "Searching for '@_'\n";
   unless ($result = $con->search(@_)) {
     print "Your query contains a syntax error.\n";
@@ -96,10 +108,11 @@ sub wr {
   my $self = shift;
   my $hit  = shift;
   my $result;
-  
+
   if (@_ or !$hit) {
     print "USAGE: wr <hit-number>\n";
   } else {
+    $con ||= _open_connection || return;
     print "fetching info on hit number $hit\n";
     $result = $con->info($hit);
     print @$result;
@@ -117,6 +130,7 @@ sub wd {
     print "USAGE: wd <hit-number>\n";
     return;
   } 
+  $con ||= _open_connection || return;
   print "Get hit number $hit ...";
   my $text  = $con->get($hit);
   my $lines = ($text)?@$text:'no';
@@ -145,6 +159,7 @@ sub wl {
     print "USAGE: wl <maximum-hit-count>\n";
     return;
   }
+  $con ||= _open_connection || return;
   print "Setting maximum hit count to $hits\n";
   $con->hits($hits);
 }
@@ -235,8 +250,7 @@ END {
   unlink $tmp if -e $tmp;
 }
 
-# make require fail if we could not connect
-$con;
+1;
 
 __DATA__
 

@@ -11,7 +11,6 @@ SYNOPSIS
       > wh
       > wh wq
 
-
 DESCRIPTION
     CPAN::WAIT adds some comands to the CPAN `shell()' to perform searches
     on a WAIT server. It connects to a WAIT server using a simple protocoll
@@ -51,7 +50,6 @@ DESCRIPTION
           des=(information system*)           wild-card search
           au=ilia                             author names may be misspelled
 
-
         You can build arbitary boolean combination of the above examples.
         Field names may be abbreviated. For further information see
         http://ls6-www.informatik.uni-dortmund.de/CPAN
@@ -71,7 +69,6 @@ DESCRIPTION
            9 8.039 pl2pm - Rough tool to translate Perl4 .pl files to Perl5 .pm modules. 
           10 8.039 perlpod - plain old documentation 
 
-
     wr *hit-number*
         Display the Record of hit number *hit-number*:
 
@@ -82,14 +79,12 @@ DESCRIPTION
           size            5643
           docid           data/perl/x2p/a2p.pod
 
-
     wd *hit-number*
         Fetches the full text from the server and runs perlpod on it. Make
         sure that you have perlpod in your path. Also check if your perlpod
         version can handle absolute pathes. Some older versions ironically
         do not find a document if the full patch is given on the command
         line.
-
 
 AUTHOR
     Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de>
