@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Sun Feb  2 21:33:54 1997
+# Last Modified On: Mon Feb  3 17:59:58 1997
 # Language        : CPerl
-# Update Count    : 73
+# Update Count    : 87
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
@@ -27,7 +27,7 @@ require FileHandle;
 use Carp;
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION   = '0.14';
+$VERSION   = '0.15';
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(wh wq wr wd wl);
 
@@ -65,11 +65,12 @@ sub wq {
   my $result;
   local ($") = ' ';
   
-  print "Searching for @_\n";
+  print "Searching for '@_'\n";
   unless ($result = $con->search(@_)) {
     print "Your query contains a syntax error.\n";
     query_help();
   } else {
+    print $con->message;
     print @{$result};
     print "Type 'wr <number>' or 'wd <number>' to examine the results\n";
   }
@@ -82,9 +83,9 @@ sub wr {
   my $result;
   
   if (@_ or !$hit) {
-    print "USAGE: w <hit-number>\n";
+    print "USAGE: wr <hit-number>\n";
   } else {
-    print "What is hit number $hit\n";
+    print "fetching info on hit number $hit\n";
     $result = $con->info($hit);
     print @$result;
   }
@@ -97,7 +98,7 @@ sub wd {
   my $result;
 
   if (@_ or !$hit) {
-    print "USAGE: g <hit-number>\n";
+    print "USAGE: wd <hit-number>\n";
     return;
   } 
   print "Get hit number $hit ...";
@@ -121,36 +122,23 @@ sub wd {
 sub wl {
   my $self = shift;
   my $hits = shift;
-
+  
   if (@_) {
     print "USAGE: wl <maximum-hit-count>\n";
     return;
-  } 
+  }
+  print "Setting maximum hit count to $hits\n";
   $con->hits($hits);
 }
 
-sub wh {
-  my $self = shift;
-  my $cmd  = shift;
-
-  if ($cmd and $cmd =~ /q$/) {
-    query_help();
-  } else {
-    print qq[
-Available commands:
-wq        query           search the WAIT4CPAN server
-wr        hit-number      display search result record
-wd        hit-number      fetch the document and run perldoc on it
-wl        count           limit search to <count> hits
-wh        command         displays help on command if available
-];
-  }
-  1;
-}
-
-
-sub query_help {
-  print q{
+my %HELP =
+  (
+   'h' => q{
+'wh'           displays a short summary of commands available via the WAIT
+               plugin.
+'wh <command>' displays information about a the command given as argument
+   },
+   'q' => q{
 Here are some query examples:
 
 information retrieval               free text query 
@@ -165,8 +153,64 @@ des=(information system*)           wild-card search
 au=ilia                             author names may be misspelled
 
 You can build arbitary boolean combination of the above examples.
+The following fields are known: 
+
+  'synopsis', 'name', 'bugs', 'author', 'example', 'description',
+  'environment'
+
 Field names may be abbreviated.
-}
+},
+   'r' => q{
+'wr <hit-number>'  displays the record of the selected hit. Records look
+                   like this:
+
+   source          authors/id/CHIPS/perl5.003_24.tar.gz
+   headline        perl - Practical Extraction and Report Language 
+   size            12786
+   docid           data/perl/pod/perl.pod
+
+'source'   is the patch relative to http://www.perl.org/CPAN/.
+'headline' is the contents of the 'NAME' section of the POD document
+'size'     is the size of the POD document (not the size of the tar archive)!
+'docid'    is the path the POS document is stored in. It should be the
+           path in the tar archive minus the version number + a 'data'
+           prefix.
+   },
+   'l' => q{
+Since answers to queries are sorted by decreasing probability of relevance,
+you will probably be interested only in the first few hits. To limit the amout
+of network traffic, the WAIT server only returns the best 10 hits per default.
+You can change this limit with 'wl <number>'.
+   },
+   'd' => q{
+The 'wd <hit-number>' command retrieves the POD document form the
+server and stores it in the file 'w2c' in your CPAN directory. Then it
+runs 'perlpod' on it. If you have problems, check if you local
+'perlpod' works with absolute path names. Older versions are know to
+fail. Also try to avoid fetching of large documents like 'perlfunc.pod'.
+Use 'wr <hit-number>' to see how large the documents are before fetching
+the actually if you have a slow connection.
+},
+
+  );
+
+sub wh {
+  my $self = shift;
+  my $cmd  = shift;
+
+  if ($cmd and $cmd =~ /(\w)$/) {
+    print $HELP{$1} || "No help for 'w$1' yet.\n";
+  } else {
+    print qq[
+Available commands:
+wq        query           search the WAIT4CPAN server
+wr        hit-number      display search result record
+wd        hit-number      fetch the document and run perldoc on it
+wl        count           limit search to <count> hits
+wh        command         displays help on command if available
+];
+  }
+  1;
 }
 
 END {

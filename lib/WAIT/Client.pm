@@ -11,8 +11,11 @@
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
 # 
-# $Locker$
-# $Log$
+# $Locker: pfeifer $
+# $Log: Client.pm,v $
+# Revision 1.5.1.2  1997/02/03 10:19:51  pfeifer
+# patch15: Allow array argument for search().
+#
 # 
 # Code snarfed from Net::NNTP and modified
 
