@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Fri Jan 31 20:07:52 1997
+# Last Modified On: Sun Feb  2 21:33:54 1997
 # Language        : CPerl
-# Update Count    : 70
+# Update Count    : 73
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
@@ -27,7 +27,7 @@ require FileHandle;
 use Carp;
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION   = '0.13';
+$VERSION   = '0.14';
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(wh wq wr wd wl);
 
@@ -140,7 +140,7 @@ sub wh {
 Available commands:
 wq        query           search the WAIT4CPAN server
 wr        hit-number      display search result record
-wr        hit-number      fetch the document and run perldoc on it
+wd        hit-number      fetch the document and run perldoc on it
 wl        count           limit search to <count> hits
 wh        command         displays help on command if available
 ];
@@ -184,12 +184,12 @@ CPAN::WAIT - adds commands to search a WAIT4CPAN server to the CPAN C<shell()>
 =head1 SYNOPSIS
 
   perl -MCPAN -e shell
-  > ws au=wall
+  > wq au=wall
   > wr 3
   > wd 3
   > wl 20
   > wh
-  > wh ws
+  > wh wq
 
 =head1 DESCRIPTION
 
@@ -208,14 +208,14 @@ The commands available are:
 
 Displays a short help message if called without arguments. If you
 provide the name of another command you will get more information on
-this command if available. Currently only B<ws> will be explained.
+this command if available. Currently only B<wq> will be explained.
 
 =item B<wl> I<count>
 
 Limit the number of hits returned in a search to I<count>. The limit
 usually is set ot 10 of you don't set it.
 
-=item B<ws> I<query>
+=item B<wq> I<query>
 
 Send a query to the server. 
 
@@ -238,7 +238,7 @@ F<http://ls6-www.informatik.uni-dortmund.de/CPAN>
 
 The result should look like this:
 
-  ws au=wall
+  wq au=wall
 
    1 8.039 a2p - Awk to Perl translator 
    2 8.039 s2p - Sed to Perl translator 

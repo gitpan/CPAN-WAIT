@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 10:49:37 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Fri Jan 31 10:52:31 1997
+# Last Modified On: Sun Feb  2 21:09:06 1997
 # Language        : CPerl
-# Update Count    : 4
+# Update Count    : 5
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
@@ -27,7 +27,6 @@ use vars qw(@ISA);
 
 sub search
 {
-  @_ == 2 or croak 'usage: $wait->search( QUERY )';
   my $wait = shift;
   
   $wait->_SEARCH(@_)

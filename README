@@ -4,12 +4,12 @@ NAME
 
 SYNOPSIS
       perl -MCPAN -e shell
-      > ws au=wall
+      > wq au=wall
       > wr 3
       > wd 3
       > wl 20
       > wh
-      > wh ws
+      > wh wq
 
 
 DESCRIPTION
@@ -24,13 +24,13 @@ DESCRIPTION
     wh [command]
         Displays a short help message if called without arguments. If you
         provide the name of another command you will get more information on
-        this command if available. Currently only ws will be explained.
+        this command if available. Currently only wq will be explained.
 
     wl *count*
         Limit the number of hits returned in a search to *count*. The limit
         usually is set ot 10 of you don't set it.
 
-    ws *query*
+    wq *query*
         Send a query to the server.
 
         Here are some query examples:
@@ -53,7 +53,7 @@ DESCRIPTION
 
         The result should look like this:
 
-          ws au=wall
+          wq au=wall
 
            1 8.039 a2p - Awk to Perl translator 
            2 8.039 s2p - Sed to Perl translator 
@@ -80,7 +80,7 @@ DESCRIPTION
 
     wd *hit-number*
         Fetches the full text from the server and runs perlpod on it. Make
-        sure that you have perlpod in you path. Also ceck if your perlpod
+        sure that you have perlpod in your path. Also check if your perlpod
         version can handle absolute pathes. Some older versions ironically
         do not find a document if the full patch is given on the command
         line.
