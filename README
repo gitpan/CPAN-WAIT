@@ -1,6 +1,5 @@
 NAME
-    CPAN::WAIT - adds commands to search a WAIT4CPAN server to the CPAN
-    `shell()'
+    CPAN::WAIT - adds commands to search a WAIT4CPAN server to the CPAN `shell()'
 
 SYNOPSIS
       perl -MCPAN -e shell
@@ -13,18 +12,18 @@ SYNOPSIS
 
 
 DESCRIPTION
-    CPAN::WAIT adds some comands to the CPAN `shell()' to perform searches
-    on a WAIT server. It connects to a WAIT server using a simple protocoll
-    resembling NNTP as described in RFC977. It uses the WAIT::Client module
-    to handle this connection. This in turn inherits from Net::NNTP from the
-    libnet package. So you need Net::NNTP to use this module.
+    CPAN::WAIT adds some comands to the CPAN `shell()' to perform searches on a
+    WAIT server. It connects to a WAIT server using a simple protocoll resembling
+    NNTP as described in RFC977. It uses the WAIT::Client module to handle this
+    connection. This in turn inherits from Net::NNTP from the libnet package. So
+    you need Net::NNTP to use this module.
 
     The commands available are:
 
     wh [command]
-        Displays a short help message if called without arguments. If you
-        provide the name of another command you will get more information on
-        this command if available. Currently only wq will be explained.
+        Displays a short help message if called without arguments. If you provide
+        the name of another command you will get more information on this command
+        if available. Currently only wq will be explained.
 
     wl *count*
         Limit the number of hits returned in a search to *count*. The limit
@@ -47,9 +46,9 @@ DESCRIPTION
           au=ilia                             author names may be misspelled
 
 
-        You can build arbitary boolean combination of the above examples.
-        Field names may be abbreviated. For further information see
-        http://ls6-www.informatik.uni-dortmund.de/CPAN
+        You can build arbitary boolean combination of the above examples. Field
+        names may be abbreviated. For further information see http://ls6-
+        www.informatik.uni-dortmund.de/CPAN
 
         The result should look like this:
 
@@ -79,11 +78,10 @@ DESCRIPTION
 
 
     wd *hit-number*
-        Fetches the full text from the server and runs perlpod on it. Make
-        sure that you have perlpod in your path. Also check if your perlpod
-        version can handle absolute pathes. Some older versions ironically
-        do not find a document if the full patch is given on the command
-        line.
+        Fetches the full text from the server and runs perlpod on it. Make sure
+        that you have perlpod in your path. Also check if your perlpod version
+        can handle absolute pathes. Some older versions ironically do not find a
+        document if the full patch is given on the command line.
 
 
 AUTHOR

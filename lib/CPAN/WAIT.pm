@@ -4,18 +4,12 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Mon Feb  3 17:59:58 1997
+# Last Modified On: Tue Feb 11 15:43:30 1997
 # Language        : CPerl
-# Update Count    : 87
+# Update Count    : 104
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
-# 
-# $Locker: pfeifer $
-# $Log: WAIT.pm,v $
-# Revision 1.1  1997/01/31 16:03:50  pfeifer
-# Initial revision
-#
 # 
 
 package CPAN::WAIT;
@@ -27,7 +21,7 @@ require FileHandle;
 use Carp;
 use vars qw(@EXPORT_OK @ISA $VERSION);
 
-$VERSION   = '0.15';
+$VERSION   = '0.20';
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(wh wq wr wd wl);
 
@@ -36,14 +30,19 @@ my ($host, $port, $con);
 unless ($CPAN::Config->{'wait_list'}) {
   $CPAN::Config->{'wait_list'} = ['wait://ls6.informatik.uni-dortmund.de'];
 }
+
 my $server;
 for $server (@{$CPAN::Config->{'wait_list'}}) {
   if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
     ($host, $port) = ($1, $2 || 1404);
     $con = new WAIT::Client $host, Port => $port;
-    last if $con;
+    if ($con) {
+      print "Ok that did work. Will be slow though\n";
+      last;
+    }
   }
 }
+
 my $tmp = $CPAN::META->catfile
   (
    $CPAN::Config->{'cpan_home'},
@@ -51,9 +50,25 @@ my $tmp = $CPAN::META->catfile
    );
 
 unless ($con) {
+  warn "Could not connect to the WAIT server at $host port $port\n";
+
+  if ($CPAN::Config->{'http_proxy'}) {
+    print "Trying your http proxy $CPAN::Config->{'http_proxy'}\n";
+    for $server (@{$CPAN::Config->{'wait_list'}}) {
+      if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
+        ($host, $port) = ($1, $2 || 1404);
+        $con = new WAIT::Client::HTTP $host,
+                                      Port  => $port,
+                                      Proxy => $CPAN::Config->{'http_proxy'};
+        last if $con;
+      }
+    }
+  }
+}
+
+unless ($con) {
   warn <<EOM
-Could not connect to the WAIT server at $host port $port
-So no searching available. Either your box is not connected to the
+Either your box is not connected to the
 Internet or the WAIT server is down for maintenance.
 
 EOM

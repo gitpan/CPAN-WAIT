@@ -4,20 +4,16 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 15:36:26 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Fri Jan 31 16:54:40 1997
+# Last Modified On: Tue Feb 11 15:44:55 1997
 # Language        : CPerl
-# Update Count    : 8
+# Update Count    : 18
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
 # 
-# $Locker$
-# $Log$
-# 
 
 use ExtUtils::MakeMaker;
-# See lib/ExtUtils/MakeMaker.pm for details of how to influence
-# the contents of the Makefile that is written.
+
 WriteMakefile
   (
    'NAME'	   => 'CPAN::WAIT',
@@ -29,8 +25,8 @@ WriteMakefile
    },                         
    'dist'          =>
    {
-    PREOP        => 'co -l README && pod2text lib/CPAN/WAIT.pm > README && '.
-                    'ci -u README',
+    PREOP        => 'pod2text lib/CPAN/WAIT.pm > README;'.
+                    'changelog -update',
     DIST_DEFAULT => 'tardist',
     COMPRESS     => 'gzip -9f'
    },

@@ -12,8 +12,11 @@
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
 # 
-# $Locker$
-# $Log$
+# $Locker:  $
+# $Log: basic.t,v $
+# Revision 1.2  1997/02/04 15:27:24  pfeifer
+# *** empty log message ***
+#
 # 
 
 BEGIN { $| = 1; print "1..5\n"; }
