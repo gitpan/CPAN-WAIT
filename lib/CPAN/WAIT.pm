@@ -1,12 +1,12 @@
 #                              -*- Mode: Perl -*- 
 # $Basename: WAIT.pm $
-# $Revision: 1.1 $
+# $Revision: 1.6 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Mon Aug 11 18:04:46 1997
+# Last Modified On: Tue Aug 12 11:54:22 1997
 # Language        : CPerl
-# Update Count    : 134
+# Update Count    : 141
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
@@ -14,15 +14,16 @@
 # 
 
 package CPAN::WAIT;
-require CPAN::Config;
-require CPAN;
+use ExtUtils::MakeMaker; # MM->catfile
+use CPAN ();
 require WAIT::Client;
 require FileHandle;
-use Carp;
-use vars qw($VERSION $DEBUG);
+use vars qw($VERSION $DEBUG $TIMEOUT);
 
-# $Format: "\$VERSION = '$ModuleVersion$';"$
-$VERSION = '0.23';
+# $Format: "\$\V\E\R\S\I\O\N = '$ModuleVersion$';"$ MM_Unix bug
+$VERSION = '0.24';
+$TIMEOUT = 20;                  # Set this to some larger value if you
+                                # have a slow connection.
 
 sub _open_connection () {
   my ($host, $port, $con);
@@ -40,7 +41,7 @@ sub _open_connection () {
     if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
       ($host, $port) = ($1, $2 || 1404);
       # Constructor is inherited from Net::NNTP
-      $con = WAIT::Client->new($host, Port => $port, Timeout => 20)
+      $con = WAIT::Client->new($host, Port => $port, Timeout => $TIMEOUT)
         unless $DEBUG and $DEBUG =~ /force proxy/;
       last SERVER if $con;
     }
@@ -60,7 +61,7 @@ sub _open_connection () {
           $con = WAIT::Client::HTTP->new($host,
                                          Port  => $port,
                                          Proxy => $CPAN::Config->{'http_proxy'},
-                                         Timeout => 20);
+                                         Timeout => $TIMEOUT);
           last SERVER if $con;
         }
       }
@@ -80,9 +81,7 @@ sub _open_connection () {
 
 my $con;
 # Temporary file for retrieved documents
-my $tmp;
-
-$tmp = $CPAN::META->catfile ($CPAN::Config->{'cpan_home'}, 'w4c.pod');
+my $tmp = MM->catfile($CPAN::Config->{'cpan_home'}, 'w4c.pod');
 
 # run a search
 sub wq {
@@ -94,7 +93,7 @@ sub wq {
   print "Searching for '@_'\n";
   unless ($result = $con->search(@_)) {
     print "Your query contains a syntax error.\n";
-    query_help();
+    $self->wh('wq');
   } else {
     print $con->message;
     print @{$result};
@@ -281,6 +280,10 @@ If no direct connection to the WAIT server is possible, the modules
 tries to connect via your HTTP proxy (as given by the CPAN
 configuration). Be warned though that the emulation of the stateful
 protocol via HTTP is slow.
+
+The variable C<CPAN::WAIT::TIMEOUT> specifies the number of seconds to
+wait for an answer from the server. The default is 20. You may want to
+set it to some larger value if you have a slow connection.
 
 The commands available are:
 

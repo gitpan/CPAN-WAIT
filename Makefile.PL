@@ -1,6 +1,6 @@
 #                              -*- Mode: Perl -*- 
 # $Basename: Makefile.PL $
-# $Revision: 1.1 $
+# $Revision: 1.4 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 15:36:26 1997
 # Last Modified By: Ulrich Pfeifer
@@ -19,7 +19,7 @@ WriteMakefile
   (
    'NAME'	   => 'CPAN::WAIT',
 #  $Format: "   'VERSION' => '$ModuleVersion$',"$
-   'VERSION' => '0.23',
+   'VERSION' => '0.24',
    'PREREQ_PM'     =>
    {
     CPAN      => 0,

@@ -23,6 +23,10 @@ DESCRIPTION
     configuration). Be warned though that the emulation of the stateful
     protocol via HTTP is slow.
 
+    The variable `CPAN::WAIT::TIMEOUT' specifies the number of seconds to
+    wait for an answer from the server. The default is 20. You may want to
+    set it to some larger value if you have a slow connection.
+
     The commands available are:
 
     wh [command]

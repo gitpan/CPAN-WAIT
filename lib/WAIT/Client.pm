@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #                              -*- Mode: Perl -*- 
 # $Basename: Client.pm $
-# $Revision: 1.1 $
+# $Revision: 1.3 $
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 10:49:37 1997
 # Last Modified By: Ulrich Pfeifer
