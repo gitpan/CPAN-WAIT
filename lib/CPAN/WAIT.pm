@@ -4,7 +4,7 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Thu Feb 13 15:20:48 1997
+# Last Modified On: Mon Feb 17 09:38:30 1997
 # Language        : CPerl
 # Update Count    : 110
 # Status          : Unknown, Use with caution!
@@ -22,7 +22,7 @@ use Carp;
 use Config;
 use vars qw(@EXPORT_OK @ISA $VERSION $DEBUG);
 
-$VERSION   = '0.21';
+$VERSION   = '0.22';
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(wh wq wr wd wl);
 

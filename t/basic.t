@@ -5,18 +5,12 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 16:34:58 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Sun Feb  2 21:12:19 1997
+# Last Modified On: Mon Feb 17 09:38:09 1997
 # Language        : CPerl
-# Update Count    : 12
+# Update Count    : 13
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
-# 
-# $Locker:  $
-# $Log: basic.t,v $
-# Revision 1.2  1997/02/04 15:27:24  pfeifer
-# *** empty log message ***
-#
 # 
 
 BEGIN { $| = 1; print "1..5\n"; }

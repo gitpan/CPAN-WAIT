@@ -1,12 +1,11 @@
-#!/app/unido-i06/magic/perl
 # Makefile.PL -- 
 # ITIID           : $ITI$ $Header $__Header$
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 15:36:26 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Tue Feb 11 15:44:55 1997
+# Last Modified On: Mon Feb 17 09:40:44 1997
 # Language        : CPerl
-# Update Count    : 18
+# Update Count    : 20
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
