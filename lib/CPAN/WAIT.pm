@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Thu Mar 23 17:55:56 2000
+# Last Modified On: Thu Mar 23 21:19:20 2000
 # Language        : CPerl
-# Update Count    : 143
+# Update Count    : 145
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
@@ -15,13 +15,27 @@
 
 package CPAN::WAIT;
 use ExtUtils::MakeMaker; # MM->catfile
-use CPAN::Config ();
+
+# try to avoid 'use'ing CPAN.pm
+# code stolen from CPAN::Config::load ;
+
+eval {require CPAN::Config;};       # We eval because of some
+                                    # MakeMaker problems
+unless ($CPAN::dot_cpan++){
+  unshift @INC, MM->catdir($ENV{HOME},".cpan");
+  eval {require CPAN::MyConfig;};   # where you can override
+                                    # system wide settings
+  shift @INC;
+}
+ 
+
+
 require WAIT::Client;
 require FileHandle;
 use vars qw($VERSION $DEBUG $TIMEOUT);
 
 # $Format: "\$\V\E\R\S\I\O\N = '$ModuleVersion$';"$ MM_Unix bug
-$VERSION = '0.26';
+$VERSION = '0.27';
 $TIMEOUT = 20;                  # Set this to some larger value if you
                                 # have a slow connection.
 

@@ -1,3 +1,8 @@
+2000-03-23  Ulrich Pfeifer  <pfeifer@wait.de>
+
+	* lib/CPAN/WAIT.pm: Sanarfed code from CPAN::Config::load to load
+	config.  Neither use CPAN nor use CPAN::Config is useful.
+
 2000-03-23  Ulrich Pfeifer  <upf@de.uu.net>
 
 	* Makefile.PL: Made test optional.
