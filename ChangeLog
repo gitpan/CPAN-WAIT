@@ -1,3 +1,9 @@
+Thu Feb 13 11:00:00 1997 Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de> 
+
+	* ChangeLog MANIFEST Makefile.PL README lib/CPAN/WAIT.pm t/proxy.t:
+	  Fixed messages emmitted by 'require CPAN::WAIT'. Added test for
+	  proxy mode.
+
 Tue Feb 11 14:00:00 1997 Ulrich Pfeifer <pfeifer@ls6.informatik.uni-dortmund.de> 
 
 	* lib/CPAN/WAIT.pm lib/WAIT/Client.pm: The is now a emulation of

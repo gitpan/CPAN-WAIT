@@ -18,6 +18,10 @@ DESCRIPTION
     connection. This in turn inherits from Net::NNTP from the libnet package. So
     you need Net::NNTP to use this module.
 
+    If no direct connection to the WAIT server is possible, the modules tries to
+    connect via your HTTP proxy (as given by the CPAN configuration). Be warned
+    though that the emulation of the stateful protocol via HTTP is slow.
+
     The commands available are:
 
     wh [command]

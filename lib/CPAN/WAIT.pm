@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Tue Feb 11 15:43:30 1997
+# Last Modified On: Thu Feb 13 15:20:48 1997
 # Language        : CPerl
-# Update Count    : 104
+# Update Count    : 110
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Universität Dortmund, all rights reserved.
@@ -19,38 +19,35 @@ require CPAN;
 require WAIT::Client;
 require FileHandle;
 use Carp;
-use vars qw(@EXPORT_OK @ISA $VERSION);
+use Config;
+use vars qw(@EXPORT_OK @ISA $VERSION $DEBUG);
 
-$VERSION   = '0.20';
+$VERSION   = '0.21';
 @ISA       = qw(Exporter);
 @EXPORT_OK = qw(wh wq wr wd wl);
 
 my ($host, $port, $con);
 
+# Make sure that there is a wait server to try
 unless ($CPAN::Config->{'wait_list'}) {
   $CPAN::Config->{'wait_list'} = ['wait://ls6.informatik.uni-dortmund.de'];
 }
 
+# Try direct connection
 my $server;
 for $server (@{$CPAN::Config->{'wait_list'}}) {
   if ($server =~ m(^wait://([^:]+)(?::(\d+))?)) {
     ($host, $port) = ($1, $2 || 1404);
-    $con = new WAIT::Client $host, Port => $port;
-    if ($con) {
-      print "Ok that did work. Will be slow though\n";
-      last;
-    }
+    $con = new WAIT::Client $host, Port => $port
+      unless $DEBUG and $DEBUG =~ /force proxy/;
+    last if $con;
   }
 }
 
-my $tmp = $CPAN::META->catfile
-  (
-   $CPAN::Config->{'cpan_home'},
-   'w4c.pod'
-   );
-
+# Try connection via an http proxy
 unless ($con) {
-  warn "Could not connect to the WAIT server at $host port $port\n";
+  warn "Could not connect to the WAIT server at $host port $port\n"
+     unless $DEBUG and $DEBUG =~ /force proxy/;
 
   if ($CPAN::Config->{'http_proxy'}) {
     print "Trying your http proxy $CPAN::Config->{'http_proxy'}\n";
@@ -63,18 +60,20 @@ unless ($con) {
         last if $con;
       }
     }
+    warn "No luck with your proxy either. Giving up\n"
+      unless $con;
+  } else {
+    warn "If your tell the CPAN module were your http proxy is, I would try that\n";
   }
 }
 
-unless ($con) {
-  warn <<EOM
-Either your box is not connected to the
-Internet or the WAIT server is down for maintenance.
+# We had no luck. require will fail!
+warn "No searching available!\n" unless $con;
 
-EOM
-  ;
-}
+# Temporary file for retrieved documents
+my $tmp = $CPAN::META->catfile ($CPAN::Config->{'cpan_home'}, 'w4c.pod');
 
+# run a search
 sub wq {
   my $self = shift;
   my $result;
@@ -92,6 +91,7 @@ sub wq {
   $result;
 }
 
+# display hit record
 sub wr {
   my $self = shift;
   my $hit  = shift;
@@ -107,6 +107,7 @@ sub wr {
   $result;
 }
 
+# display hit document
 sub wd {
   my $self = shift;
   my $hit  = shift;
@@ -130,7 +131,9 @@ sub wd {
   # is system available every were ??
   system $^X, '-S', 'perldoc', $tmp
     and warn "Could not run '$^X -S perldoc $tmp': $?\n"
-      and print @$text;         # should we pipe to a pager here?
+      and system $Config{'pager'}, $tmp
+        and warn "Could not run '$Config{'pager'} $tmp': $?\n"
+          and print @$text;
   $text;
 }
 
@@ -232,6 +235,7 @@ END {
   unlink $tmp if -e $tmp;
 }
 
+# make require fail if we could not connect
 $con;
 
 __DATA__
@@ -258,6 +262,11 @@ protocoll resembling NNTP as described in RFC977. It uses the
 B<WAIT::Client> module to handle this connection. This in turn
 inherits from B<Net::NNTP> from the F<libnet> package. So you need
 B<Net::NNTP> to use this module.
+
+If no direct connection to the WAIT server is possible, the modules
+tries to connect via your HTTP proxy (as given by the CPAN
+configuration). Be warned though that the emulation of the stateful
+protocol via HTTP is slow.
 
 The commands available are:
 
