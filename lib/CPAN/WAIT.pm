@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Tue Mar 21 15:28:01 2000
+# Last Modified On: Thu Mar 23 17:55:56 2000
 # Language        : CPerl
-# Update Count    : 142
+# Update Count    : 143
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
@@ -21,7 +21,7 @@ require FileHandle;
 use vars qw($VERSION $DEBUG $TIMEOUT);
 
 # $Format: "\$\V\E\R\S\I\O\N = '$ModuleVersion$';"$ MM_Unix bug
-$VERSION = '0.25';
+$VERSION = '0.26';
 $TIMEOUT = 20;                  # Set this to some larger value if you
                                 # have a slow connection.
 
