@@ -77,7 +77,7 @@ DESCRIPTION
         Display the Record of hit number *hit-number*:
 
           wr 1
-          
+  
           source          authors/id/CHIPS/perl5.003_24.tar.gz
           headline        a2p - Awk to Perl translator 
           size            5643

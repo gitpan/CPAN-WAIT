@@ -1,3 +1,8 @@
+2000-03-21  Ulrich Pfeifer  <pfeifer@wait.de>
+
+	* lib/CPAN/WAIT.pm: Replaced 'use CPAN' by 'use CPAN::Config' as
+	suggested by Johan Vromans.
+
 Tue Aug 12 11:48:43 1997  Ulrich Pfeifer  <pfeifer@ls6.informatik.uni-dortmund.de>
 
 	* lib/CPAN/WAIT.pm (wq): calls wh now if qeury contains syntax error

@@ -19,7 +19,7 @@ WriteMakefile
   (
    'NAME'	   => 'CPAN::WAIT',
 #  $Format: "   'VERSION' => '$ModuleVersion$',"$
-   'VERSION' => '0.24',
+   'VERSION' => '0.25',
    'PREREQ_PM'     =>
    {
     CPAN      => 0,

@@ -4,9 +4,9 @@
 # Author          : Ulrich Pfeifer
 # Created On      : Fri Jan 31 11:30:46 1997
 # Last Modified By: Ulrich Pfeifer
-# Last Modified On: Tue Aug 12 11:54:22 1997
+# Last Modified On: Tue Mar 21 15:28:01 2000
 # Language        : CPerl
-# Update Count    : 141
+# Update Count    : 142
 # Status          : Unknown, Use with caution!
 # 
 # (C) Copyright 1997, Ulrich Pfeifer, all rights reserved.
@@ -15,13 +15,13 @@
 
 package CPAN::WAIT;
 use ExtUtils::MakeMaker; # MM->catfile
-use CPAN ();
+use CPAN::Config ();
 require WAIT::Client;
 require FileHandle;
 use vars qw($VERSION $DEBUG $TIMEOUT);
 
 # $Format: "\$\V\E\R\S\I\O\N = '$ModuleVersion$';"$ MM_Unix bug
-$VERSION = '0.24';
+$VERSION = '0.25';
 $TIMEOUT = 20;                  # Set this to some larger value if you
                                 # have a slow connection.
 
